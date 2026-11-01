@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBN F-Store | Delicious Food. Made for Every Craving.</title>
+<meta name="description" content="JBN F-Store — burgers, fried chicken, pizza, rice meals, pasta, snacks, drinks and desserts. Order online, your way.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home" data-auth="guest">
+
+<noscript>
+  <p class="noscript-msg">JBN F-Store needs JavaScript to work. Please turn JavaScript on in your browser.</p>
+</noscript>
+
+<!-- =====================================================================
+     HEADER  (the buttons on the right change depending on who is logged in:
+     data-show="guest" = visitors, "user" = customers, "admin" = administrator)
+     ===================================================================== -->
+<header class="site-header">
+  <div class="container nav-inner">
+    <a href="#home" class="brand">
+      <span class="brand-badge">F</span>
+      JBN <span class="hl">F-Store</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#home" data-route="home" data-show="user admin" hidden>Home</a>
+      <a href="#menu" data-route="menu" data-show="user admin" hidden>Menu</a>
+      <a href="#about" data-route="about" data-show="user admin" hidden>About</a>
+      <a href="#contact" data-route="contact" data-show="user admin" hidden>Contact</a>
+      <a href="#dashboard" data-route="dashboard" data-show="user" hidden>My Account</a>
+      <a href="#admin" data-route="admin" data-show="admin" hidden>Admin Dashboard</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button type="button" class="icon-btn" data-action="open-cart" data-show="user admin" hidden aria-label="Open cart">
+        🛒<span class="cart-count" data-cart-count>0</span>
+      </button>
+      <a href="#login" class="btn btn-outline btn-sm" data-show="guest">Log In</a>
+      <a href="#register" class="btn btn-primary btn-sm" data-show="guest">Sign Up</a>
+      <span class="nav-greeting" data-show="user admin" hidden>Hi, <strong data-user-name></strong></span>
+      <button type="button" class="btn btn-outline btn-sm" data-action="logout" data-show="user admin" hidden>Log Out</button>
+      <button type="button" class="hamburger" id="hamburgerBtn" data-action="toggle-nav" aria-label="Open menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <a href="#home" data-route="home" data-show="user admin" hidden>Home</a>
+  <a href="#menu" data-route="menu" data-show="user admin" hidden>Menu</a>
+  <a href="#about" data-route="about" data-show="user admin" hidden>About</a>
+  <a href="#contact" data-route="contact" data-show="user admin" hidden>Contact</a>
+  <a href="#dashboard" data-route="dashboard" data-show="user" hidden>My Account</a>
+  <a href="#admin" data-route="admin" data-show="admin" hidden>Admin Dashboard</a>
+  <a href="#login" class="btn btn-outline btn-block" data-show="guest">Log In</a>
+  <a href="#register" class="btn btn-primary btn-block" data-show="guest">Sign Up</a>
+  <button type="button" class="btn btn-outline btn-block" data-action="logout" data-show="user admin" hidden>Log Out</button>
+</nav>
+
+<main>
+
+  <!-- =================================================================
+       HOME
+       ================================================================= -->
+  <section class="view" data-view="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Welcome to JBN F-Store</span>
+          <h1>Delicious Food. <br>Made for Every <span class="accent">Craving.</span></h1>
+          <p>From juicy burgers and satisfying meals to refreshing drinks and sweet treats, JBN F-Store has something for everyone.</p>
+          <div class="hero-actions">
+            <a href="#menu" class="btn btn-primary">Order Now</a>
+            <a href="#menu" class="btn btn-outline">Explore Menu</a>
+          </div>
+          <div class="hero-stats">
+            <div><strong data-stat="categories">9</strong><span>Menu Categories</span></div>
+            <div><strong data-stat="dishes">45</strong><span>Dishes to Try</span></div>
+            <div><strong>4.8★</strong><span>Customer Rating</span></div>
+          </div>
+        </div>
+        <div class="hero-media">
+          <span class="hero-stamp"><span class="stamp stamp--red">🔥 Best Seller</span></span>
+          <div class="hero-media-card">
+            <img src="images/double-beef-burger.jpg" alt="JBN F-Store double beef burger">
+          </div>
+          <div class="hero-float-card">
+            <span class="dot">🛵</span>
+            <div><strong>25–35 min</strong><span>Average delivery</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">What are you craving?</span>
+          <h2>Popular Categories</h2>
+        </div>
+        <div class="category-rail" id="categoryRail"></div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Customer favorites</span>
+          <h2>Best Sellers</h2>
+          <p>The dishes our customers order again and again.</p>
+        </div>
+        <div class="product-grid" id="bestSellersGrid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="promo">
+          <div class="promo-copy">
+            <span class="eyebrow">Special Promotion</span>
+            <h2>Hungry? Grab a Combo!</h2>
+            <p>Get more for less with our combo meals — burgers, chicken, pizza and family bundles, all bundled up with drinks and sides.</p>
+            <div class="promo-actions">
+              <a href="#menu" data-category="combos" class="btn btn-ghost-light">Order Now</a>
+            </div>
+          </div>
+          <div class="promo-media">
+            <img src="images/combo-family-meal-bundle.jpg" alt="JBN F-Store family meal bundle">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Built for sharing</span>
+          <h2>Combo Meals</h2>
+          <p>Complete meals bundled together at a better price.</p>
+        </div>
+        <div class="product-grid" id="combosGrid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Our promise</span>
+          <h2>Why Choose JBN F-Store</h2>
+        </div>
+        <div class="why-grid" id="whyGrid"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       MENU  (search + category filter)
+       ================================================================= -->
+  <section class="view" data-view="menu" hidden>
+    <div class="menu-hero container">
+      <span class="eyebrow">Full Menu</span>
+      <h1>Everything JBN F-Store Serves</h1>
+      <p>Search or filter by category to find exactly what you're craving.</p>
+    </div>
+
+    <div class="menu-toolbar">
+      <div class="container">
+        <div class="search-bar">
+          <span class="icon">🔍</span>
+          <input type="search" id="menuSearch" placeholder="Search dishes, e.g. burger, milk tea, pizza…" aria-label="Search menu">
+        </div>
+        <div class="filter-row" id="filterRow"></div>
+      </div>
+    </div>
+
+    <section class="section section--tight">
+      <div class="container">
+        <p class="menu-results-count" id="menuResultsCount"></p>
+        <div class="product-grid" id="menuGrid"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       ABOUT
+       ================================================================= -->
+  <section class="view" data-view="about" hidden>
+    <section class="page-banner">
+      <div class="container">
+        <span class="eyebrow">About Us</span>
+        <h1>The Story Behind JBN F-Store</h1>
+        <p>A little food store with a big appetite for making people happy, one order at a time.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container about-split">
+        <div class="about-media">
+          <img src="images/combo-family-meal-bundle.jpg" alt="A spread of JBN F-Store dishes" loading="lazy">
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">Our Story</span>
+          <h2>Started with a Simple Craving</h2>
+          <p>JBN F-Store began as a small neighborhood food stall with one goal: serve genuinely good food, fast, without cutting corners. The "F" stands for Food because at the end of the day, that's all we're really about.</p>
+          <p>What started with a handful of burgers and a fryer has grown into a full menu of Filipino-favorite comfort food — from crispy fried chicken and cheesy pizza to milk tea and rice meals — all made to order, every single day.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container about-split reverse">
+        <div class="about-media">
+          <img src="images/pizza-pepperoni.jpg" alt="Freshly baked JBN F-Store pizza" loading="lazy">
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">Our Mission</span>
+          <h2>Good Food, Honest Prices, Every Time</h2>
+          <p>We're on a mission to make satisfying, freshly made food accessible to every craving and every budget, without ever compromising on taste or quality.</p>
+          <p>Every dish that leaves our kitchen is made with real ingredients, cooked fresh, and packed with care, because we believe fast food shouldn't mean forgettable food.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container about-split">
+        <div class="about-media">
+          <img src="images/milktea-taro.jpg" alt="JBN F-Store milk tea and drinks" loading="lazy">
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">Our Vision</span>
+          <h2>A Craving-Friendly Name in Every Neighborhood</h2>
+          <p>We envision JBN F-Store as the go-to name for Filipino families and friends craving a satisfying meal — whether it's a quick solo burger run or a full family feast.</p>
+          <p>As we grow, our promise stays the same: fresh food, warm service, and a menu that always has something for everyone at the table.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">The JBN difference</span>
+          <h2>Why Customers Choose Us</h2>
+          <p>It's more than food — it's the whole experience.</p>
+        </div>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="why-icon">🌿</div>
+            <h3>Fresh &amp; Delicious</h3>
+            <p>Every dish is prepared fresh to order, never sitting around waiting.</p>
+          </div>
+          <div class="value-card">
+            <div class="why-icon">💰</div>
+            <h3>Affordable Prices</h3>
+            <p>Generous portions and honest pricing, made for everyday cravings.</p>
+          </div>
+          <div class="value-card">
+            <div class="why-icon">⭐</div>
+            <h3>Quality Ingredients</h3>
+            <p>We only use ingredients we'd be happy to serve our own family.</p>
+          </div>
+          <div class="value-card">
+            <div class="why-icon">⚡</div>
+            <h3>Easy Ordering</h3>
+            <p>Browse, customize and order in just a few taps — no hassle.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="promo promo--center">
+          <div class="promo-copy">
+            <h2>Ready for your next craving?</h2>
+            <p>Browse the full menu and build your order in just a few taps.</p>
+            <div class="promo-actions">
+              <a href="#menu" class="btn btn-ghost-light">Explore Menu</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       CONTACT / FEEDBACK
+       ================================================================= -->
+  <section class="view" data-view="contact" hidden>
+    <section class="page-banner">
+      <div class="container">
+        <span class="eyebrow">We'd love to hear from you</span>
+        <h1>Contact &amp; Feedback</h1>
+        <p>Questions, suggestions, or just want to tell us how your order went? Send us a message below.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container contact-grid">
+        <div class="contact-info-card">
+          <h3>Get in Touch</h3>
+          <p>We usually reply within one business day. For urgent order concerns, give us a call.</p>
+          <div class="contact-row">
+            <span class="ico">📍</span>
+            <div><strong>Visit Us</strong><span data-store="address"></span></div>
+          </div>
+          <div class="contact-row">
+            <span class="ico">📞</span>
+            <div><strong>Call Us</strong><span data-store="phone"></span></div>
+          </div>
+          <div class="contact-row">
+            <span class="ico">✉️</span>
+            <div><strong>Email Us</strong><span data-store="email"></span></div>
+          </div>
+          <div class="contact-row">
+            <span class="ico">🕒</span>
+            <div><strong>Store Hours</strong><span data-store="hours"></span></div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <form id="feedbackForm" novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="fbName">Full Name</label>
+                <input type="text" id="fbName" placeholder="Juan Dela Cruz" autocomplete="name">
+                <span class="field-error"></span>
+              </div>
+              <div class="field">
+                <label for="fbEmail">Email Address</label>
+                <input type="email" id="fbEmail" placeholder="you@email.com" autocomplete="email">
+                <span class="field-error"></span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="fbSubject">Subject</label>
+              <input type="text" id="fbSubject" placeholder="What's this about?">
+              <span class="field-error"></span>
+            </div>
+            <div class="field">
+              <label>Rating <span class="optional">(optional)</span></label>
+              <div class="star-rating" id="starRating">
+                <button type="button" data-action="star" data-value="1" aria-label="1 star">★</button>
+                <button type="button" data-action="star" data-value="2" aria-label="2 stars">★</button>
+                <button type="button" data-action="star" data-value="3" aria-label="3 stars">★</button>
+                <button type="button" data-action="star" data-value="4" aria-label="4 stars">★</button>
+                <button type="button" data-action="star" data-value="5" aria-label="5 stars">★</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="fbMessage">Message</label>
+              <textarea id="fbMessage" rows="5" placeholder="Tell us what's on your mind…"></textarea>
+              <span class="field-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="fbSubmitBtn">Submit Feedback</button>
+            <div class="form-status" id="formStatus" role="status"></div>
+            <p class="form-note">Demo version: the form is checked and accepted, but the message is not sent to a server yet.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       LOG IN
+       ================================================================= -->
+  <section class="view" data-view="login" hidden>
+    <section class="auth-section">
+      <div class="container">
+        <div class="auth-card">
+          <div class="auth-head">
+            <span class="eyebrow">Welcome back</span>
+            <h1>Log in to JBN F-Store</h1>
+            <p>Enter your email and password to continue.</p>
+          </div>
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label for="loginEmail">Email address</label>
+              <input type="email" id="loginEmail" placeholder="you@email.com" autocomplete="email">
+              <span class="field-error"></span>
+            </div>
+            <div class="field">
+              <label for="loginPassword">Password</label>
+              <div class="password-wrap">
+                <input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password">
+                <button type="button" class="pw-toggle" data-action="toggle-password" data-target="loginPassword">Show</button>
+              </div>
+              <span class="field-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Log In</button>
+            <div class="form-status" id="loginStatus" role="alert"></div>
+          </form>
+          <p class="auth-switch">New to JBN F-Store? <a href="#register">Create an account</a></p>
+          <p class="auth-note">Demo project: accounts are saved in this browser only.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       REGISTER  (no role field: new accounts are always normal users)
+       ================================================================= -->
+  <section class="view" data-view="register" hidden>
+    <section class="auth-section">
+      <div class="container">
+        <div class="auth-card">
+          <div class="auth-head">
+            <span class="eyebrow">Join us</span>
+            <h1>Create your account</h1>
+            <p>Sign up to save your details and order faster.</p>
+          </div>
+          <form id="registerForm" novalidate>
+            <div class="field">
+              <label for="regName">Full name</label>
+              <input type="text" id="regName" placeholder="Juan Dela Cruz" autocomplete="name">
+              <span class="field-error"></span>
+            </div>
+            <div class="field">
+              <label for="regEmail">Email address</label>
+              <input type="email" id="regEmail" placeholder="you@email.com" autocomplete="email">
+              <span class="field-error"></span>
+            </div>
+            <div class="field">
+              <label for="regPassword">Password</label>
+              <div class="password-wrap">
+                <input type="password" id="regPassword" placeholder="Create a password" autocomplete="new-password">
+                <button type="button" class="pw-toggle" data-action="toggle-password" data-target="regPassword">Show</button>
+              </div>
+              <span class="field-error"></span>
+              <span class="hint">At least 8 characters, with an uppercase letter, a lowercase letter and a number.</span>
+            </div>
+            <div class="field">
+              <label for="regConfirm">Confirm password</label>
+              <div class="password-wrap">
+                <input type="password" id="regConfirm" placeholder="Type the password again" autocomplete="new-password">
+                <button type="button" class="pw-toggle" data-action="toggle-password" data-target="regConfirm">Show</button>
+              </div>
+              <span class="field-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            <div class="form-status" id="registerStatus" role="alert"></div>
+          </form>
+          <p class="auth-switch">Already have an account? <a href="#login">Log in</a></p>
+          <p class="auth-note">Demo project: accounts are saved in this browser only.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       USER DASHBOARD  (customers only; filled in by script.js after login)
+       ================================================================= -->
+  <section class="view" data-view="dashboard" hidden>
+    <section class="page-banner">
+      <div class="container">
+        <span class="eyebrow">My Account</span>
+        <h1 id="dashWelcome">Welcome back!</h1>
+        <p>Browse the menu, check your cart and keep your details up to date.</p>
+        <div class="banner-actions">
+          <a href="#menu" class="btn btn-primary">Browse Menu</a>
+          <button type="button" class="btn btn-outline" data-action="open-cart">View Cart</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="stat-grid stat-grid--three">
+          <div class="stat-card"><div class="stat-icon">🛒</div><div><strong id="dashCartCount">0</strong><span>Items in your cart</span></div></div>
+          <div class="stat-card"><div class="stat-icon">📅</div><div><strong class="stat-text" id="dashMemberSince">—</strong><span>Member since</span></div></div>
+          <div class="stat-card"><div class="stat-icon">✉️</div><div><strong class="stat-text" id="dashEmail">—</strong><span>Account email</span></div></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="form-card">
+            <h2 class="card-title">Profile</h2>
+            <p class="card-sub">Update your name and email address.</p>
+            <form id="profileForm" novalidate>
+              <div class="field">
+                <label for="profileName">Full name</label>
+                <input type="text" id="profileName" autocomplete="name">
+                <span class="field-error"></span>
+              </div>
+              <div class="field">
+                <label for="profileEmail">Email address</label>
+                <input type="email" id="profileEmail" autocomplete="email">
+                <span class="field-error"></span>
+              </div>
+              <button type="submit" class="btn btn-primary">Save Profile</button>
+              <div class="form-status" id="profileStatus" role="status"></div>
+            </form>
+          </div>
+
+          <div class="form-card">
+            <h2 class="card-title">Change password</h2>
+            <p class="card-sub">Choose a new password for your account.</p>
+            <form id="passwordForm" novalidate>
+              <div class="field">
+                <label for="currentPassword">Current password</label>
+                <div class="password-wrap">
+                  <input type="password" id="currentPassword" autocomplete="current-password">
+                  <button type="button" class="pw-toggle" data-action="toggle-password" data-target="currentPassword">Show</button>
+                </div>
+                <span class="field-error"></span>
+              </div>
+              <div class="field">
+                <label for="newPassword">New password</label>
+                <div class="password-wrap">
+                  <input type="password" id="newPassword" autocomplete="new-password">
+                  <button type="button" class="pw-toggle" data-action="toggle-password" data-target="newPassword">Show</button>
+                </div>
+                <span class="field-error"></span>
+                <span class="hint">At least 8 characters, with an uppercase letter, a lowercase letter and a number.</span>
+              </div>
+              <div class="field">
+                <label for="confirmNewPassword">Confirm new password</label>
+                <div class="password-wrap">
+                  <input type="password" id="confirmNewPassword" autocomplete="new-password">
+                  <button type="button" class="pw-toggle" data-action="toggle-password" data-target="confirmNewPassword">Show</button>
+                </div>
+                <span class="field-error"></span>
+              </div>
+              <button type="submit" class="btn btn-primary">Change Password</button>
+              <div class="form-status" id="passwordStatus" role="status"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Picked for you</span>
+          <h2>Best Sellers</h2>
+        </div>
+        <div class="product-grid" id="dashBestSellers"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================================
+       ADMIN DASHBOARD  (administrators only)
+       The tables below are only filled in by script.js when the logged-in
+       account is an admin.
+       ================================================================= -->
+  <section class="view" data-view="admin" hidden>
+    <section class="page-banner">
+      <div class="container">
+        <span class="eyebrow">Admin Dashboard</span>
+        <h1>Store Management</h1>
+        <p id="adminWelcome">Signed in as administrator.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="stat-grid" id="adminStats"></div>
+
+        <div class="tab-row" role="tablist">
+          <button type="button" class="chip active" data-action="admin-tab" data-tab="products" role="tab">Products</button>
+          <button type="button" class="chip" data-action="admin-tab" data-tab="users" role="tab">Users</button>
+        </div>
+
+        <!-- Products tab -->
+        <div class="panel" id="adminProductsPanel">
+          <div class="panel-toolbar">
+            <input type="search" class="toolbar-input" id="adminProductSearch" placeholder="Search products…" aria-label="Search products">
+            <select class="toolbar-select" id="adminProductCategory" aria-label="Filter by category"></select>
+            <button type="button" class="btn btn-primary btn-sm" data-action="admin-add">+ Add Product</button>
+            <button type="button" class="btn btn-outline btn-sm" data-action="admin-reset">Reset Menu</button>
+          </div>
+          <p class="table-count" id="adminProductCount"></p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Product</th><th>Category</th><th>Price</th><th>Quantity</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="adminProductRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Users tab -->
+        <div class="panel" id="adminUsersPanel" hidden>
+          <div class="panel-toolbar">
+            <input type="search" class="toolbar-input" id="adminUserSearch" placeholder="Search by name or email…" aria-label="Search users">
+            <select class="toolbar-select" id="adminUserRole" aria-label="Filter by role">
+              <option value="all">All roles</option>
+              <option value="user">Users</option>
+              <option value="admin">Admins</option>
+            </select>
+          </div>
+          <p class="table-count" id="adminUserCount"></p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Registered</th><th>Role</th></tr>
+              </thead>
+              <tbody id="adminUserRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+</main>
+
+<!-- =====================================================================
+     FOOTER
+     ===================================================================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#home" class="brand"><span class="brand-badge">F</span>JBN F-Store</a>
+        <p>Delicious food made for every craving — burgers, chicken, pizza, rice meals, pasta, snacks, drinks and desserts, all in one place.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <a href="#menu" data-category="burgers">Burgers</a>
+        <a href="#menu" data-category="chicken">Chicken</a>
+        <a href="#menu" data-category="pizza">Pizza</a>
+        <a href="#menu" data-category="combos">Combo Meals</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get in Touch</h4>
+        <ul>
+          <li>📍 <span data-store="address"></span></li>
+          <li>📞 <span data-store="phone"></span></li>
+          <li>✉️ <span data-store="email"></span></li>
+          <li>🕒 <span data-store="hours"></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> JBN F-Store. All rights reserved.</span>
+      <span>Made with 🧡 for food lovers.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- =====================================================================
+     CART DRAWER
+     ===================================================================== -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button type="button" class="modal-close static" data-action="close-cart" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-summary" id="cartSummary"></div>
+  <div class="checkout-note" id="checkoutNote"></div>
+</aside>
+
+<!-- =====================================================================
+     PRODUCT DETAILS WINDOW
+     ===================================================================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-media">
+      <div id="modalImage"></div>
+      <button type="button" class="modal-close" data-action="close-modal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+      <div class="modal-rating" id="modalRating"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div id="modalOptions"></div>
+      <div class="qty-row">
+        <span class="option-group-label">Quantity</span>
+        <div class="qty-control">
+          <button type="button" data-action="modal-qty" data-delta="-1" aria-label="Decrease quantity">−</button>
+          <span id="modalQty">1</span>
+          <button type="button" data-action="modal-qty" data-delta="1" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+      <p class="modal-note" id="modalStockNote"></p>
+      <div class="modal-footer">
+        <div>
+          <div class="modal-total-label">Total</div>
+          <div class="modal-total-value" id="modalTotal">₱0</div>
+        </div>
+        <button type="button" class="btn btn-primary" id="modalAddToCart" data-action="modal-add">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     ADMIN: ADD / EDIT PRODUCT FORM
+     ===================================================================== -->
+<div class="modal-overlay" id="formOverlay">
+  <div class="modal-card modal-card--form" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+    <form id="productForm" novalidate>
+      <div class="form-modal-head">
+        <h2 id="formTitle">Add Product</h2>
+        <button type="button" class="modal-close static" data-action="close-form" aria-label="Close">✕</button>
+      </div>
+
+      <div class="field">
+        <label for="pfName">Product name</label>
+        <input type="text" id="pfName" placeholder="e.g. Beef Tapa Rice Meal" maxlength="60">
+        <span class="field-error"></span>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="pfCategory">Category</label>
+          <select id="pfCategory"></select>
+          <span class="field-error"></span>
+        </div>
+        <div class="field">
+          <label for="pfPrice">Price (₱)</label>
+          <input type="number" id="pfPrice" placeholder="99" min="0" step="0.01" inputmode="decimal">
+          <span class="field-error"></span>
+          <span class="hint" id="pfPriceNote" hidden>This is the starting price. Size/option prices change by the same amount.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pfQuantity">Quantity in stock</label>
+        <input type="number" id="pfQuantity" placeholder="50" min="0" step="1" inputmode="numeric">
+        <span class="field-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="pfDescription">Description</label>
+        <textarea id="pfDescription" rows="3" placeholder="A short description customers will see…" maxlength="250"></textarea>
+        <span class="field-error"></span>
+      </div>
+
+      <div class="field">
+        <label for="pfImageSelect">Product image</label>
+        <div class="image-picker">
+          <div class="image-preview" id="pfPreview"></div>
+          <div class="image-controls">
+            <select id="pfImageSelect"></select>
+            <label class="file-label" for="pfImageFile">…or upload your own (JPG, PNG or WEBP)</label>
+            <input type="file" id="pfImageFile" accept="image/jpeg,image/png,image/webp">
+          </div>
+        </div>
+        <span class="field-error"></span>
+      </div>
+
+      <div class="form-status" id="productFormStatus" role="alert"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline btn-sm" data-action="close-form">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="formSaveBtn">Add Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =====================================================================
+     "ARE YOU SURE?" POP-UP
+     ===================================================================== -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-card modal-card--small" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMessage"></p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-outline btn-sm" id="confirmCancel" data-action="confirm-no">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" id="confirmOk" data-action="confirm-yes">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
